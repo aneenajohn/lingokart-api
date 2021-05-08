@@ -4,33 +4,41 @@ const productSchema = new Schema(
   {
     name: {
       type: String,
-      required: "Add a name to the product",
+      required:"Product name is required",
     },
     price: {
       type: Number,
-      required: "Add price to the product",
+      required: "Product price is required",
     },
     description: {
       type: String,
-      required: "Add a decription to the product",
+      required: "Product description is required",
     },
     category: {
       type: Schema.Types.ObjectId,
       ref: "Category",
-      required: "Add a category for the product",
     },
     inStock: {
       type: Boolean,
-      required: "is the product in stock or not ?",
+      required: "Avalibility is required",
     },
-    speedDelivery: {
+    fastDelivery: {
       type: Boolean,
-      required: "Is the product under speedDelivery ?",
+      required: "Avalibility is required",
     },
     imageUrl: {
       type: String,
-      required: "Please add the image Url of product",
+      required: "image url is required",
     },
+    ratings:{
+      type: Number,
+      min: [1, "Product Ratings cannot be less than 1"],
+      max: [5, "Product Ratings cannot be more than 1"],
+      required: "Product Rating is required",
+    },
+    offer:{
+      type:String
+    }
   },
   {
     timestamps: true,
