@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 
 initializeDBConnection();
 
+
 app.get('/', (req, res) => {
   res.json({api:'This is an api for e-commerce app'})
 });

@@ -38,6 +38,10 @@ const productSchema = new Schema(
     },
     offer:{
       type:String
+    },
+    language:{
+      type:String,
+      required:"Language is required"
     }
   },
   {

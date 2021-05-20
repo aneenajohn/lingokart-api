@@ -1,5 +1,6 @@
 const { Product } = require("../models/product.model");
 const {Cart} = require("../models/cart.model");
+const {Wishlist} = require("../models/wishlist.model");
 
 const productParamHandler = async (req, res, next, productId) => {
   try {
@@ -36,6 +37,8 @@ const cartParamHandler = async (req, res, next, cartId) => {
 const wishlistParamHandler = async (req, res, next, wishlistId) => {
   try {
     const wishlistItem = await Wishlist.findById(wishlistId);
+    if (!wishlistItem)
+      return res.json({ sucess: false, message: "There is no item associated with the id provided" })
     req.wishlistItem = wishlistItem;
     next();
   } catch (err) {
