@@ -7,7 +7,10 @@ const router = express.Router();
 
 const getAllCartItems = async (req, res) => {
   try {
-    let cartItems = await Cart.find({}).populate("_id");
+    const user = req.user;
+    let cartItems = user.cart
+    // let cartItems = await Cart.find({}).populate("_id");
+    // let cartItems = await Cart.find({userId}).populate("_id");
     const normalizedCartItems = cartItems.map(item => {
       const { _id, ...doc } = item._id._doc;
       return { _id: _id, ...doc, quantity: item.quantity };
@@ -17,7 +20,7 @@ const getAllCartItems = async (req, res) => {
       cartItems: normalizedCartItems,
     });
   } catch (err) {
-    res.status(400).json({
+    res.json({
       success: false,
       message: "Cart Items cant be retrieved from server",
       errorMessage: err.message,
@@ -26,16 +29,19 @@ const getAllCartItems = async (req, res) => {
 };
 
 const addCartItem = async (req, res) => {
+  const user = req.user;
   const cartItemToAdd = req.body;
+  // const { userId } = req;
   const newCartItem = new Cart(cartItemToAdd);
   try {
     const addedCartItem = await newCartItem.save();
+    user.cart.push(addedCartItem._id);
     res.status(201).json({
       success: true,
       cartItem: addedCartItem,
     });
   } catch (err) {
-    res.status(400).json({
+    res.json({
       success: false,
       errorMessage: err.message,
     });
@@ -61,7 +67,7 @@ const updateCartItem = async (req, res) => {
     });
   }
   catch (err) {
-    res.status(400).json({
+    res.json({
       success: false,
       errorMessage: err.message,
     });
@@ -70,8 +76,10 @@ const updateCartItem = async (req, res) => {
 
 const deleteCartItem = async (req, res) => {
   try {
+    const user = req.user;
     const { cartItem } = req;
-    await cartItem.remove();
+    user.cart.pull(cartItem._id);
+    await cartItem.remove();    
     res.json({
       success: true,
       cartItem

@@ -6,7 +6,9 @@ require("dotenv").config();
 const {initializeDBConnection}=require("./db/db.js");
 const {errorHandler }  = require("./middlewares/error-handler.middleware.js");
 const {routeNotFound} = require("./middlewares/404-route-handler.middleware.js");
+const { verifyAuth } = require("./middlewares/verifyAuth");
 
+const { userRouter } = require("./routes/user.routes");
 const { productRouter } = require("./routes/product.routes");
 const {cartRouter} = require("./routes/cart.routes");
 const {wishlistRouter} = require ("./routes/wishlist.routes");
@@ -24,8 +26,10 @@ app.get('/', (req, res) => {
 });
 
 app.use("/products",productRouter);
-app.use("/cart",cartRouter);
-app.use("/wishlist", wishlistRouter);
+app.use("/users", userRouter);
+// app.use(verifyAuth);
+app.use("/cart",verifyAuth,cartRouter);
+app.use("/wishlist",verifyAuth, wishlistRouter);
 
 // ERROR HANDLER & 404s This should be the last route,Keep it here dont move
 app.use(errorHandler);
